@@ -99,18 +99,18 @@ export default function Wishes() {
 
         {upcoming.length > 0 && (
           <button type="button" className="btn btn--line more" aria-expanded={more} onClick={() => setMore((o) => !o)}>
-            {more ? 'Show less' : `View more · ${upcoming.length} upcoming in the next 30 days`}
+            {more ? 'Show less' : `View more · ${upcoming.length} upcoming`}
             <ChevronDown size={17} className={more ? 'is-up' : ''} />
           </button>
         )}
 
         {more && upBdays.length > 0 && (
-          <Sheet icon={Cake} tone="gold" title="Upcoming birthdays">
+          <Sheet icon={Cake} tone="gold" title="Upcoming birthdays" note="Next 30 days">
             <Group wishes={upBdays} meId={member.id} />
           </Sheet>
         )}
         {more && upAnns.length > 0 && (
-          <Sheet icon={HeartHandshake} tone="wine" title="Upcoming anniversaries">
+          <Sheet icon={HeartHandshake} tone="wine" title="Upcoming anniversaries" note="Next 30 days">
             <Group wishes={upAnns} meId={member.id} />
           </Sheet>
         )}

@@ -11,8 +11,6 @@ export interface NavItem {
   end?: boolean
   /** Shows a number on the icon: how many dues are pending. */
   badge?: 'dues'
-  /** On phones this item hides behind the dock's expand strip. */
-  more?: boolean
 }
 
 export const NAV: Record<Role, NavItem[]> = {
@@ -29,8 +27,8 @@ export const NAV: Record<Role, NavItem[]> = {
     { to: '/', label: 'Home', icon: House, tone: 'gold', end: true },
     { to: '/directory', label: 'E-Directory', icon: BookUser, tone: 'red' },
     { to: '/attendance', label: 'Attendance', icon: CalendarCheck, tone: 'green' },
-    { to: '/office-bearers', label: 'Office Bearers', icon: Award, tone: 'wine', more: true },
-    { to: '/wishes', label: 'Wishes', icon: PartyPopper, tone: 'navy', more: true },
+    { to: '/office-bearers', label: 'Office Bearers', icon: Award, tone: 'wine' },
+    { to: '/wishes', label: 'Wishes', icon: PartyPopper, tone: 'navy' },
     { to: '/dues', label: 'Dues', icon: IndianRupee, tone: 'gold', badge: 'dues' },
   ],
 }

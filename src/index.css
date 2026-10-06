@@ -47,7 +47,7 @@
 }
 
 *, *::before, *::after { box-sizing: border-box; }
-html { -webkit-text-size-adjust: 100%; }
+html { -webkit-text-size-adjust: 100%; scrollbar-gutter: stable; overflow-x: clip; }
 
 body {
   margin: 0;
@@ -816,7 +816,7 @@ html:has(.login), body:has(.login) { overflow: hidden; }
 .wcard.is-today { border-color: rgba(212, 0, 63, 0.35); }
 .wcard__me { font-size: 13.5px; font-weight: 500; color: var(--ink-soft); }
 .wempty { margin: 0; }
-.more { align-self: center; }
+.more { align-self: stretch; box-sizing: border-box; width: 100%; max-width: 100%; height: auto; min-height: 44px; padding: 10px 16px; justify-content: center; white-space: normal; text-align: center; line-height: 1.3; }
 .more svg { transition: transform 0.3s var(--ease); }
 .more svg.is-up { transform: rotate(180deg); }
 
@@ -1173,21 +1173,15 @@ html:has(.login), body:has(.login) { overflow: hidden; }
   .note > .i3d { --size: 38px !important; }
 }
 
-/* ---------- phone dock: four menus, the rest behind the strip ---------- */
-.dock__strip { display: none; }
+/* ---------- phone dock: one row of icons that scrolls sideways ---------- */
 @media (max-width: 860px) {
-  .dock { flex-wrap: wrap; justify-content: center; align-items: flex-start; column-gap: 0; row-gap: 4px; padding: 0 4px 8px; }
-  .dock a { flex: 0 0 calc(25% - 1px); font-size: 11px; }
-  .dock a .i3d { --size: 46px !important; }
-  .dock__strip { position: relative; order: -3; display: flex; align-items: center; justify-content: center; flex: 0 0 calc(100% + 8px); height: 18px; margin: 0 -4px 2px; padding: 0; border: 0; border-bottom: 1px solid rgba(212, 0, 63, 0.16); border-radius: 27px 27px 0 0; background: rgba(255, 255, 255, 0.35); color: var(--ink-soft); cursor: pointer; }
-  .dock__strip svg { width: 14px; height: 14px; transition: transform 0.35s var(--ease); }
-  .dock__strip:hover { color: var(--red); background: var(--red-wash); }
-  .dock.is-open .dock__strip svg { transform: rotate(180deg); color: var(--red); }
-  .dock__strip.has-active::after { content: ''; position: absolute; top: 3px; left: calc(50% + 12px); width: 6px; height: 6px; border-radius: 50%; background: var(--grad-red); box-shadow: 0 0 8px rgba(212, 0, 63, 0.7); }
-  .dock a.dock__more { display: none; order: -2; }
-  .dock.is-open::before { content: ''; order: -1; flex: 0 0 100%; height: 0; }
-  .dock.is-open a.dock__more { display: flex; animation: drop 0.25s var(--ease); }
-  .dock.is-open { box-shadow: 0 -20px 50px -20px rgba(133, 0, 31, 0.45), 0 18px 40px -20px rgba(133, 0, 31, 0.5), inset 0 1px 0 #fff; }
+  .dock { flex-wrap: nowrap; justify-content: flex-start; align-items: flex-start; column-gap: 0; padding: 12px 6px 8px; overflow-x: auto; overflow-y: hidden; scrollbar-width: none; -webkit-overflow-scrolling: touch; overscroll-behavior-x: contain; }
+  .dock::-webkit-scrollbar { display: none; }
+  .dock { padding: 10px 4px 8px; }
+  .dock a { flex: 1 1 0; min-width: 0; gap: 0; }
+  .dock a .i3d { --size: 42px !important; }
+  .dock a.active::after { margin-top: 5px; }
+  .dock__label { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 }
 
 /* White text on the red banners always stays readable. */
@@ -1374,3 +1368,29 @@ html:has(.login), body:has(.login) { overflow: hidden; }
   .note__dot { width: 8px; height: 8px; }
   .notes__empty { padding: 22px 16px; }
 }
+
+/* phone dock: an iOS-style frosted pink glass bar, same padding above and below the icons */
+@media (max-width: 860px) {
+  .dock {
+    border-radius: 26px;
+    padding: 9px 6px;
+    align-items: center;
+    background: linear-gradient(180deg, rgba(255, 232, 240, 0.5), rgba(255, 205, 222, 0.38));
+    -webkit-backdrop-filter: blur(22px) saturate(1.8);
+    backdrop-filter: blur(22px) saturate(1.8);
+    border: 1px solid rgba(255, 255, 255, 0.65);
+    box-shadow: 0 14px 34px -14px rgba(133, 0, 31, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.8);
+  }
+  .dock a .i3d { opacity: 1; filter: none; }
+  /* the "you are here" dot sits in the bottom padding, so the bar stays evenly padded */
+  .dock a.active::after { position: absolute; left: 50%; bottom: -6px; margin: 0; transform: translateX(-50%); }
+}
+
+/* icons always sit above the strip's flared edge */
+@media (max-width: 860px) {
+  .dock a { position: relative; z-index: 2; }
+}
+
+/* name bubble shown while an icon is touched (phones only) */
+.dock__tip { position: fixed; bottom: 92px; z-index: 60; transform: translateX(-50%); padding: 6px 14px; border-radius: 999px; font-size: 12.5px; font-weight: 600; white-space: nowrap; color: #fff; background: var(--grad-banner); border: 1px solid rgba(255, 255, 255, 0.5); box-shadow: 0 12px 24px -10px rgba(133, 0, 31, 0.7), inset 0 1px 0 rgba(255, 255, 255, 0.5); pointer-events: none; animation: drop 0.15s var(--ease); }
+@media (min-width: 861px) { .dock__tip { display: none; } }

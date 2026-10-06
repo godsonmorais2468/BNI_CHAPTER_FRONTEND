@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom'
-import { ChevronsUp, LogOut, UserRound } from 'lucide-react'
+import { LogOut, UserRound } from 'lucide-react'
 import { HOME, NAV } from '../data/nav'
 import { useAuth } from '../lib/auth'
 import { useDismiss } from '../lib/hooks'
@@ -21,10 +21,18 @@ export default function Shell() {
   const menuRef = useRef<HTMLDivElement>(null)
   const close = useCallback(() => setOpen(false), [])
   useDismiss(menuRef, open, close)
-  const [dockOpen, setDockOpen] = useState(false)
   const dockRef = useRef<HTMLElement>(null)
-  const closeDock = useCallback(() => setDockOpen(false), [])
-  useDismiss(dockRef, dockOpen, closeDock)
+  /* On phones the dock shows only icons; touching one pops up its name. */
+  const [tip, setTip] = useState<{ label: string; x: number } | null>(null)
+  const tipTimer = useRef<number | undefined>(undefined)
+  const showTip = (el: HTMLElement, label: string) => {
+    window.clearTimeout(tipTimer.current)
+    const r = el.getBoundingClientRect()
+    setTip({ label, x: Math.min(Math.max(r.left + r.width / 2, 48), window.innerWidth - 48) })
+    /* the bubble stays for two seconds from the press */
+    tipTimer.current = window.setTimeout(() => setTip(null), 2000)
+  }
+  useEffect(() => () => window.clearTimeout(tipTimer.current), [])
 
   useEffect(() => {
     window.scrollTo(0, 0)
@@ -32,8 +40,6 @@ export default function Shell() {
 
   if (!auth.role) return null
   const nav = NAV[auth.role]
-  const extras = nav.filter((n) => n.more)
-  const extraActive = extras.some((n) => location.pathname.startsWith(n.to))
   const { member } = auth
   const pct = member ? percent(member) : 0
   const dueCount = member ? db.invoices.filter((i) => i.memberId === member.id && i.status === 'due').length : 0
@@ -125,14 +131,14 @@ export default function Shell() {
           <Outlet />
         </main>
 
-        <nav className={`dock ${dockOpen ? 'is-open' : ''}`} aria-label="Main" ref={dockRef}>
-          {extras.length > 0 && (
-            <button type="button" className={`dock__strip ${extraActive && !dockOpen ? 'has-active' : ''}`} onClick={() => setDockOpen((o) => !o)} aria-expanded={dockOpen} aria-label={dockOpen ? 'Hide more menus' : 'Show more menus'}>
-              <ChevronsUp size={20} />
-            </button>
-          )}
+        <nav className="dock" aria-label="Main" ref={dockRef}>
           {nav.map((n) => (
-            <NavLink key={n.to} to={n.to} end={n.end} className={n.more ? 'dock__more' : undefined} onClick={() => setDockOpen(false)}>
+            <NavLink
+              key={n.to}
+              to={n.to}
+              end={n.end}
+              onPointerDown={(e) => showTip(e.currentTarget, n.label)}
+            >
               <span className="dock__ico">
                 <Icon3D icon={n.icon} tone={n.tone} size={52} />
                 {n.badge === 'dues' && dueCount > 0 && (
@@ -141,10 +147,15 @@ export default function Shell() {
                   </b>
                 )}
               </span>
-              {n.label}
+              <span className="dock__label">{n.label}</span>
             </NavLink>
           ))}
         </nav>
+        {tip && (
+          <div className="dock__tip" style={{ left: tip.x }} role="status">
+            {tip.label}
+          </div>
+        )}
       </div>
     </>
   )
