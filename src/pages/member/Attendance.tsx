@@ -18,7 +18,7 @@ export default function Attendance() {
   const { member } = useAuth()
   const db = useDB()
   const toast = useToast()
-  const now = useNow(1000)
+  const now = useNow(15_000)
   const [scanning, setScanning] = useState(false)
   const [scanKey, setScanKey] = useState(0)
   const [scanError, setScanError] = useState('')
@@ -125,7 +125,6 @@ export default function Attendance() {
               {coordinator && (
                 <CoordinatorQr
                   meeting={meeting}
-                  now={now}
                   marked={db.attendance.filter((a) => a.meetingId === meeting.id).length}
                   total={mates.length}
                 />
@@ -208,7 +207,8 @@ function MeetingCard({ meeting, now }: { meeting: Meeting; now: number }) {
 }
 
 /** What the attendance coordinator shows to the room. The code changes every 30 seconds. */
-function CoordinatorQr({ meeting, now, marked, total }: { meeting: Meeting; now: number; marked: number; total: number }) {
+function CoordinatorQr({ meeting, marked, total }: { meeting: Meeting; marked: number; total: number }) {
+  const now = useNow(1000)
   const code = qrCodeFor(meeting.id, now)
   const left = Math.ceil((QR_STEP_MS - (now % QR_STEP_MS)) / 1000)
   return (

@@ -20,7 +20,7 @@ export const DESIGNATIONS = [
 ]
 
 const REGIONS: Region[] = [
-  { id: 'rg-kerala', name: 'Kerala Central', adminName: 'Rajesh Menon', adminMobile: '9000000002', adminPin: '2222', createdAt: '2026-01-05T09:00:00.000Z' },
+  { id: 'rg-kerala', name: 'Trivandrum', adminName: 'Rajesh Menon', adminMobile: '9000000002', adminPin: '2222', createdAt: '2026-01-05T09:00:00.000Z' },
   { id: 'rg-tvm', name: 'Trivandrum', adminName: 'Suresh Kumar', adminMobile: '9000000003', adminPin: '3333', createdAt: '2026-02-11T09:00:00.000Z' },
 ]
 
@@ -31,7 +31,7 @@ const PLANS: Plan[] = [
 ]
 
 const CHAPTERS: Chapter[] = [
-  { id: 'ch-titans', regionId: 'rg-kerala', name: 'Titans', city: 'Kochi', createdAt: '2026-01-20T09:00:00.000Z' },
+  { id: 'ch-titans', regionId: 'rg-kerala', name: 'Mystics', city: 'Kochi', createdAt: '2026-01-20T09:00:00.000Z' },
   { id: 'ch-falcons', regionId: 'rg-kerala', name: 'Falcons', city: 'Thrissur', createdAt: '2026-03-02T09:00:00.000Z' },
   { id: 'ch-milestones', regionId: 'rg-tvm', name: 'Milestones', city: 'Trivandrum', createdAt: '2026-02-18T09:00:00.000Z' },
   { id: 'ch-majestic', regionId: 'rg-tvm', name: 'Majestic', city: 'Trivandrum', createdAt: '2026-02-25T09:00:00.000Z' },
@@ -152,7 +152,7 @@ function buildMember(raw: Raw, i: number, chapterId: string, regionId: string, m
   }
 }
 
-/* Two polls for Titans (one single choice, one multiple choice) and one for Milestones, with some answers already in. */
+/* Two polls for Mystics(one single choice, one multiple choice) and one for Milestones, with some answers already in. */
 function buildPolls(members: Member[]): { polls: Poll[]; votes: Vote[] } {
   const opts = (...texts: string[]) => texts.map((text, i) => ({ id: `o${i + 1}`, text }))
   const base = { closed: false, createdAt: new Date().toISOString() }
@@ -251,8 +251,8 @@ function buildMeetings(members: Member[]): { meetings: Meeting[]; attendance: At
   const base = { durationMin: 90, createdAt: at(-30 * DAY) }
 
   const meetings: Meeting[] = [
-    { ...base, id: 'mt-titans-now', regionId: 'rg-kerala', chapterId: 'ch-titans', title: 'Weekly meeting', mode: 'offline', startsAt: at(20 * MIN), venue: 'Grand Residency, Marine Drive, Kochi', lat: 9.9816, lng: 76.2799, radiusM: 150 },
-    { ...base, id: 'mt-titans-w1', regionId: 'rg-kerala', chapterId: 'ch-titans', title: 'Weekly meeting', mode: 'offline', startsAt: at(-7 * DAY), venue: 'Grand Residency, Marine Drive, Kochi', lat: 9.9816, lng: 76.2799, radiusM: 150 },
+    { ...base, id: 'mt-titans-now', regionId: 'rg-kerala', chapterId: 'ch-titans', title: 'Weekly meeting', mode: 'offline', startsAt: at(20 * MIN), venue: 'SFS Homebridge, Trivandrum', lat: 8.5269869, lng: 76.8878998, radiusM: 100 },
+    { ...base, id: 'mt-titans-w1', regionId: 'rg-kerala', chapterId: 'ch-titans', title: 'Weekly meeting', mode: 'offline', startsAt: at(-7 * DAY), venue: 'SFS Homebridge, Trivandrum', lat: 8.5269869, lng: 76.8878998, radiusM: 100 },
     { ...base, id: 'mt-titans-w2', regionId: 'rg-kerala', chapterId: 'ch-titans', title: 'Online networking call', mode: 'online', startsAt: at(-14 * DAY), venue: '', lat: null, lng: null, radiusM: 100 },
     { ...base, id: 'mt-milestones-now', regionId: 'rg-tvm', chapterId: 'ch-milestones', title: 'Weekly meeting (online)', mode: 'online', startsAt: at(10 * MIN), venue: '', lat: null, lng: null, radiusM: 100 },
   ]

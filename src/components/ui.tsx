@@ -24,7 +24,7 @@ export function Icon3D({ icon: Icon, tone = 'red', size = 44 }: { icon: IconType
 export function BniMark({ size = 44 }: { size?: number }) {
   return (
     <span className="i3d t-red bni-mark" style={sizeVar(size)}>
-      <img src={logo} alt="BNI" />
+      <img src={logo} alt="BNI" decoding="async" />
     </span>
   )
 }
@@ -32,7 +32,7 @@ export function BniMark({ size = 44 }: { size?: number }) {
 /** A member's photo, or their initials on a glossy tile. */
 export function Avatar({ name, photo, size = 40 }: { name: string; photo?: string; size?: number }) {
   if (photo) {
-    return <img className="avatar-img" src={photo} alt="" style={{ width: size, height: size, borderRadius: size * 0.3 }} />
+    return <img className="avatar-img" src={photo} alt="" decoding="async" loading="lazy" style={{ width: size, height: size, borderRadius: size * 0.3 }} />
   }
   return (
     <span className={`i3d t-${toneFor(name)}`} style={sizeVar(size)} aria-hidden>

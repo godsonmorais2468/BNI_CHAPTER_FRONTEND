@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react'
-import QRCode from 'qrcode'
 
 /** Draws `text` as a QR code image. */
 export default function QrCode({ text, size = 240 }: { text: string; size?: number }) {
@@ -7,7 +6,8 @@ export default function QrCode({ text, size = 240 }: { text: string; size?: numb
 
   useEffect(() => {
     let live = true
-    QRCode.toDataURL(text, { width: size * 2, margin: 1, errorCorrectionLevel: 'M', color: { dark: '#10233F', light: '#FFFFFF' } })
+    import('qrcode')
+      .then((m) => m.default.toDataURL(text, { width: size * 2, margin: 1, errorCorrectionLevel: 'M', color: { dark: '#10233F', light: '#FFFFFF' } }))
       .then((url) => {
         if (live) setSrc(url)
       })

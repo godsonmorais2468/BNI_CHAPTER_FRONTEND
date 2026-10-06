@@ -11,7 +11,7 @@ import { fmtTime } from './format'
 import { priceFor } from './pricing'
 import type { AttendanceMethod, Chapter, DB, Invoice, Meeting, Member, Mode, PayMethod, Plan, Poll, Profile, Region, Session } from './types'
 
-const DB_KEY = 'bni-chapter:db:v7'
+const DB_KEY = 'bni-chapter:db:v9'
 const SESSION_KEY = 'bni-chapter:session'
 
 export interface ActionResult {

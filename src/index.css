@@ -1394,3 +1394,43 @@ html:has(.login), body:has(.login) { overflow: hidden; }
 /* name bubble shown while an icon is touched (phones only) */
 .dock__tip { position: fixed; bottom: 92px; z-index: 60; transform: translateX(-50%); padding: 6px 14px; border-radius: 999px; font-size: 12.5px; font-weight: 600; white-space: nowrap; color: #fff; background: var(--grad-banner); border: 1px solid rgba(255, 255, 255, 0.5); box-shadow: 0 12px 24px -10px rgba(133, 0, 31, 0.7), inset 0 1px 0 rgba(255, 255, 255, 0.5); pointer-events: none; animation: drop 0.15s var(--ease); }
 @media (min-width: 861px) { .dock__tip { display: none; } }
+
+/* ============================================================
+   PERFORMANCE
+   Live blur over scrolling content is what makes phones stutter, so
+   touch screens get solid-tint glass instead. Weak devices ("lite")
+   also drop animations and heavy shadows.
+   ============================================================ */
+html { -webkit-tap-highlight-color: transparent; }
+a, button, input, select, textarea, label, summary { touch-action: manipulation; }
+
+/* long lists only paint what is on screen */
+.crow, .row, .bcard, .inv__row, .pcard { content-visibility: auto; contain-intrinsic-size: auto 96px; }
+.bcard, .pcard { contain-intrinsic-size: auto 260px; }
+
+@media (max-width: 860px), (pointer: coarse) {
+  :root {
+    --glass: linear-gradient(145deg, rgba(255, 255, 255, 0.94) 0%, rgba(255, 255, 255, 0.84) 100%);
+    --glass-flat: rgba(255, 255, 255, 0.86);
+    --glass-shadow: 0 12px 24px -16px rgba(133, 0, 31, 0.38), inset 0 1px 0 #fff;
+  }
+  *, *::before, *::after { -webkit-backdrop-filter: none !important; backdrop-filter: none !important; }
+  .orb { animation: none; will-change: auto; box-shadow: none; }
+  .phead::after { box-shadow: none; }
+  .dock { background: linear-gradient(180deg, rgba(255, 238, 244, 0.95), rgba(255, 220, 232, 0.92)); box-shadow: 0 10px 22px -12px rgba(133, 0, 31, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.9); }
+  .brand, .me__btn, .bell__btn { background: rgba(255, 255, 255, 0.94); box-shadow: 0 8px 18px -12px rgba(133, 0, 31, 0.45), inset 0 1px 0 #fff; }
+  .scan { background: rgba(16, 35, 63, 0.7); }
+  .dock__badge { animation: badgePop 0.4s var(--ease); }
+  .i3d { box-shadow: 0 6px 12px -6px var(--glow), inset 0 1.5px 0 rgba(255, 255, 255, 0.55), inset 0 -2px 4px rgba(0, 0, 0, 0.2); }
+  .page { animation-duration: 0.25s; }
+}
+
+.lite *, .lite *::before, .lite *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; scroll-behavior: auto !important; }
+.lite .spin { animation: spin 0.9s linear infinite !important; animation-duration: 0.9s !important; animation-iteration-count: infinite !important; }
+.lite .qrpanel__bar i { transition: width 1s linear !important; transition-duration: 1s !important; }
+.lite *, .lite *::before, .lite *::after { -webkit-backdrop-filter: none !important; backdrop-filter: none !important; text-shadow: none !important; }
+.lite .orb, .lite .scene__ring { display: none; }
+.lite .i3d::before { display: none; }
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; scroll-behavior: auto !important; }
+}

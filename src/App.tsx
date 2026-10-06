@@ -1,3 +1,4 @@
+import { Suspense, lazy } from 'react'
 import type { ReactNode } from 'react'
 import { Navigate, Route, Routes, useLocation } from 'react-router-dom'
 import ToastProvider from './components/ToastProvider'
@@ -6,21 +7,22 @@ import { HOME } from './data/nav'
 import { useAuth } from './lib/auth'
 import type { Role } from './lib/types'
 import Login from './pages/Login'
-import Register from './pages/Register'
-import Plans from './pages/admin/Plans'
-import Regions from './pages/admin/Regions'
-import Chapters from './pages/region/Chapters'
-import Meetings from './pages/region/Meetings'
-import RsvpAdmin from './pages/region/Rsvp'
-import Attendance from './pages/member/Attendance'
-import Directory from './pages/member/Directory'
-import Dues from './pages/member/Dues'
 import Home from './pages/member/Home'
-import MemberView from './pages/member/MemberView'
-import MyProfile from './pages/member/MyProfile'
-import OfficeBearers from './pages/member/OfficeBearers'
-import RsvpMember from './pages/member/Rsvp'
-import Wishes from './pages/member/Wishes'
+
+const Register = lazy(() => import('./pages/Register'))
+const Plans = lazy(() => import('./pages/admin/Plans'))
+const Regions = lazy(() => import('./pages/admin/Regions'))
+const Chapters = lazy(() => import('./pages/region/Chapters'))
+const Meetings = lazy(() => import('./pages/region/Meetings'))
+const RsvpAdmin = lazy(() => import('./pages/region/Rsvp'))
+const Attendance = lazy(() => import('./pages/member/Attendance'))
+const Directory = lazy(() => import('./pages/member/Directory'))
+const Dues = lazy(() => import('./pages/member/Dues'))
+const MemberView = lazy(() => import('./pages/member/MemberView'))
+const MyProfile = lazy(() => import('./pages/member/MyProfile'))
+const OfficeBearers = lazy(() => import('./pages/member/OfficeBearers'))
+const RsvpMember = lazy(() => import('./pages/member/Rsvp'))
+const Wishes = lazy(() => import('./pages/member/Wishes'))
 
 function RequireAuth({ children }: { children: ReactNode }) {
   const { role } = useAuth()
@@ -45,6 +47,7 @@ function RoleHome() {
 export default function App() {
   return (
     <ToastProvider>
+      <Suspense fallback={null}>
       <Routes>
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
@@ -75,6 +78,7 @@ export default function App() {
         </Route>
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
+      </Suspense>
     </ToastProvider>
   )
 }

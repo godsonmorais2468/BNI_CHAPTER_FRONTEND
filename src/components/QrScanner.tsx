@@ -1,7 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import type { FormEvent } from 'react'
 import { createPortal } from 'react-dom'
-import jsQR from 'jsqr'
 import { Keyboard, ScanLine, X } from 'lucide-react'
 
 /**
@@ -23,6 +22,7 @@ export default function QrScanner({ onResult, onClose, error: serverError }: { o
     let stopped = false
     let raf = 0
     let stream: MediaStream | undefined
+    let jsQR: typeof import('jsqr').default | undefined
     const canvas = document.createElement('canvas')
     const ctx = canvas.getContext('2d', { willReadFrequently: true })
 
@@ -40,7 +40,7 @@ export default function QrScanner({ onResult, onClose, error: serverError }: { o
         canvas.height = v.videoHeight
         ctx.drawImage(v, 0, 0)
         const img = ctx.getImageData(0, 0, canvas.width, canvas.height)
-        const hit = jsQR(img.data, img.width, img.height, { inversionAttempts: 'dontInvert' })
+        const hit = jsQR?.(img.data, img.width, img.height, { inversionAttempts: 'dontInvert' })
         if (hit?.data) {
           stop()
           resultRef.current(hit.data)
@@ -51,6 +51,7 @@ export default function QrScanner({ onResult, onClose, error: serverError }: { o
     }
 
     async function start() {
+      jsQR = (await import('jsqr')).default
       if (!navigator.mediaDevices?.getUserMedia) {
         setCamError('This browser cannot open the camera here. Type the code shown under the QR instead.')
         return

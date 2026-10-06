@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { Suspense, useCallback, useEffect, useRef, useState } from 'react'
 import { NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom'
 import { LogOut, UserRound } from 'lucide-react'
 import { HOME, NAV } from '../data/nav'
@@ -33,6 +33,36 @@ export default function Shell() {
     tipTimer.current = window.setTimeout(() => setTip(null), 2000)
   }
   useEffect(() => () => window.clearTimeout(tipTimer.current), [])
+
+  /* Once the first screen is up, quietly fetch the other pages so moving around feels instant. */
+  const role = auth.role
+  useEffect(() => {
+    if (!role) return
+    const load = () => {
+      if (role === 'member') {
+        void import('../pages/member/Directory')
+        void import('../pages/member/Attendance')
+        void import('../pages/member/Dues')
+        void import('../pages/member/Wishes')
+        void import('../pages/member/OfficeBearers')
+        void import('../pages/member/Rsvp')
+        void import('../pages/member/MemberView')
+        void import('../pages/member/MyProfile')
+      } else if (role === 'region_admin') {
+        void import('../pages/region/Chapters')
+        void import('../pages/region/Meetings')
+        void import('../pages/region/Rsvp')
+      } else {
+        void import('../pages/admin/Regions')
+        void import('../pages/admin/Plans')
+      }
+    }
+    const idle = (window as Window & { requestIdleCallback?: (cb: () => void) => number }).requestIdleCallback
+    const t = idle ? idle(load) : window.setTimeout(load, 1200)
+    return () => {
+      if (!idle) window.clearTimeout(t)
+    }
+  }, [role])
 
   useEffect(() => {
     window.scrollTo(0, 0)
@@ -128,7 +158,9 @@ export default function Shell() {
         </header>
 
         <main key={location.pathname}>
-          <Outlet />
+          <Suspense fallback={<div className="page" />}>
+            <Outlet />
+          </Suspense>
         </main>
 
         <nav className="dock" aria-label="Main" ref={dockRef}>

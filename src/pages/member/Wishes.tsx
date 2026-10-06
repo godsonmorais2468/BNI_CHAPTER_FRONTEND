@@ -35,8 +35,7 @@ function WishCard({ wish, mine }: { wish: Wish; mine: boolean }) {
       </Link>
       <div className="chips">
         <span className={`chip ${wish.daysAway === 0 ? 'chip--red' : ''}`}>{whenLabel(wish)}</span>
-        {wish.years > 0 && <span className="chip chip--gold">{kind === 'birthday' ? `Turns ${wish.years}` : `${ordinal(wish.years)} anniversary`}</span>}
-        {kind === 'anniversary' && m.profile.spouse && <span className="chip">With {m.profile.spouse}</span>}
+        {kind === 'anniversary' && wish.years > 0 && <span className="chip chip--gold">{ordinal(wish.years)} anniversary</span>}
       </div>
       {wish.daysAway === 0 &&
         (mine ? (

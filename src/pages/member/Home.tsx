@@ -41,7 +41,7 @@ export default function Home() {
   const pending = db.invoices.filter((i) => i.memberId === member.id && i.status === 'due')
   const waiting = db.polls.filter((p) => p.chapterId === member.chapterId && !p.closed && !db.votes.some((v) => v.pollId === p.id && v.memberId === member.id))
   const bearers = mates.filter((m) => BEARER_GROUPS.some((g) => g.match(m.designation)))
-  const hour = new Date().getHours()
+  const hour = new Date(now).getHours()
   const greeting = hour < 12 ? 'Good morning' : hour < 17 ? 'Good afternoon' : 'Good evening'
 
   return (
