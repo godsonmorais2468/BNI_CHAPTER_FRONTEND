@@ -11,7 +11,7 @@ import { fmtTime } from './format'
 import { priceFor } from './pricing'
 import type { AttendanceMethod, Chapter, DB, Invoice, Meeting, Member, Mode, PayMethod, Plan, Poll, Profile, Region, Session } from './types'
 
-const DB_KEY = 'bni-chapter:db:v11'
+const DB_KEY = 'bni-chapter:db:v12'
 const SESSION_KEY = 'bni-chapter:session'
 
 export interface ActionResult {
@@ -185,6 +185,14 @@ export function createChapter(regionId: string, input: { name: string; city: str
   return { id: chapter.id }
 }
 
+export function setChapterUpi(chapterId: string, upiId: string, upiName: string): ActionResult {
+  const id = upiId.trim()
+  if (!/^[\w.-]{2,}@[a-zA-Z][a-zA-Z0-9]{1,}$/.test(id)) return { field: 'upiId', error: 'Enter a valid UPI ID, for example name@bank.' }
+  if (!upiName.trim()) return { field: 'upiName', error: 'Enter the name shown to the payer.' }
+  commit({ ...db, chapters: db.chapters.map((c) => (c.id === chapterId ? { ...c, upiId: id, upiName: upiName.trim() } : c)) })
+  return { id: chapterId }
+}
+
 /* ---------- registration + profile ---------- */
 
 export interface Registration {
@@ -234,6 +242,11 @@ export function registerMember(input: Registration): ActionResult {
   }
   commit({ ...db, members: [...db.members, member], invoices: [...db.invoices, first] })
   return { id: member.id }
+}
+
+/** Saves just the photo, so a new picture shows in the top bar and directory straight away. */
+export function setMemberPhoto(id: string, photo: string) {
+  commit({ ...db, members: db.members.map((m) => (m.id === id ? { ...m, photo } : m)) })
 }
 
 export function saveProfile(

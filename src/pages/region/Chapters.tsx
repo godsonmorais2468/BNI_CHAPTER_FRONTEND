@@ -1,10 +1,10 @@
 import { useState } from 'react'
 import type { FormEvent } from 'react'
-import { Landmark, MapPin, Plus, Users } from 'lucide-react'
+import { Landmark, MapPin, Plus, Smartphone, Users } from 'lucide-react'
 import { Field, Icon3D, PageHead, Sheet, StatStrip } from '../../components/ui'
 import { useAuth } from '../../lib/auth'
 import { fmtDate } from '../../lib/format'
-import { createChapter, useDB } from '../../lib/store'
+import { createChapter, setChapterUpi, useDB } from '../../lib/store'
 import { useToast } from '../../lib/toast'
 
 export default function Chapters() {
@@ -14,9 +14,24 @@ export default function Chapters() {
   const [name, setName] = useState('')
   const [city, setCity] = useState('')
   const [errors, setErrors] = useState<Record<string, string>>({})
+  const [pick, setPick] = useState('')
+  const [draft, setDraft] = useState<{ id: string; upiId: string; upiName: string } | null>(null)
+  const [upiErrors, setUpiErrors] = useState<Record<string, string>>({})
 
   if (!region) return null
   const chapters = db.chapters.filter((c) => c.regionId === region.id)
+  const payChapter = chapters.find((c) => c.id === pick) ?? chapters[0]
+  const upi = draft && draft.id === payChapter?.id ? draft : { id: payChapter?.id ?? '', upiId: payChapter?.upiId ?? '', upiName: payChapter?.upiName ?? '' }
+
+  function saveUpi(e: FormEvent) {
+    e.preventDefault()
+    if (!payChapter) return
+    const res = setChapterUpi(payChapter.id, upi.upiId, upi.upiName)
+    if (res.error) return setUpiErrors({ [res.field ?? 'form']: res.error })
+    toast(`UPI details saved for ${payChapter.name}`)
+    setUpiErrors({})
+    setDraft(null)
+  }
 
   function submit(e: FormEvent) {
     e.preventDefault()
@@ -93,6 +108,11 @@ export default function Chapters() {
                       <MapPin size={13} /> {c.city}
                     </span>
                   )}
+                  {c.upiId && (
+                    <span className="chip">
+                      <Smartphone size={13} /> {c.upiId}
+                    </span>
+                  )}
                   <span className="chip chip--gold">{db.members.filter((m) => m.chapterId === c.id).length} members</span>
                 </div>
               </article>
@@ -100,6 +120,44 @@ export default function Chapters() {
           )}
         </div>
       </div>
+
+      {chapters.length > 0 && (
+        <div className="duo-after">
+        <Sheet icon={Smartphone} tone="gold" title="Payment details (UPI)" note="Where members pay their dues">
+          <form className="form-stack" onSubmit={saveUpi} noValidate>
+            <Field label="Chapter">
+              <select
+                className="field__control native-select"
+                value={payChapter?.id ?? ''}
+                onChange={(e) => {
+                  setPick(e.target.value)
+                  setDraft(null)
+                  setUpiErrors({})
+                }}
+              >
+                {chapters.map((c) => (
+                  <option key={c.id} value={c.id}>
+                    {c.name}
+                  </option>
+                ))}
+              </select>
+            </Field>
+            <Field label="UPI ID" required hint="Members' UPI apps open with this receiver filled in." error={upiErrors.upiId}>
+              <input className="field__control" value={upi.upiId} placeholder="chapter@bank" autoCapitalize="none" onChange={(e) => setDraft({ ...upi, upiId: e.target.value })} />
+            </Field>
+            <Field label="Name shown to the payer" required error={upiErrors.upiName}>
+              <input className="field__control" value={upi.upiName} placeholder="BNI Mystics" onChange={(e) => setDraft({ ...upi, upiName: e.target.value })} />
+            </Field>
+            {upiErrors.form && <div className="form-error">{upiErrors.form}</div>}
+            <div>
+              <button className="btn btn--primary" type="submit">
+                Save UPI details
+              </button>
+            </div>
+          </form>
+        </Sheet>
+        </div>
+      )}
     </div>
   )
 }

@@ -29,6 +29,9 @@ export interface Chapter {
   regionId: string
   name: string
   city: string
+  /** Where this chapter's dues are paid: UPI ID (VPA) and the name shown to the payer. */
+  upiId?: string
+  upiName?: string
   createdAt: string
 }
 

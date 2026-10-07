@@ -259,11 +259,11 @@ export function PhotoField({ label = 'Photo (Max Size 1MB)', value, onChange }: 
   return (
     <div className={`field ${error ? 'field--invalid' : ''}`}>
       <span className="field__label">{label}</span>
+      {value && <img className="photo__preview" src={value} alt="Photo preview" />}
       <label className="filebox">
         <span className="filebox__btn">
-          <Camera size={15} /> Choose File
+          <Camera size={15} /> {value ? 'Change photo' : 'Choose File'}
         </span>
-        {value && <img className="filebox__thumb" src={value} alt="Selected photo" />}
         <span className="filebox__name">{name || (value ? 'Current photo' : 'No file chosen')}</span>
         <input type="file" accept="image/*" onChange={(e) => void pick(e.target.files?.[0])} />
       </label>

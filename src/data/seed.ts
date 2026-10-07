@@ -31,11 +31,11 @@ const PLANS: Plan[] = [
 ]
 
 const CHAPTERS: Chapter[] = [
-  { id: 'ch-titans', regionId: 'rg-kerala', name: 'Mystics', city: 'Kochi', createdAt: '2026-01-20T09:00:00.000Z' },
-  { id: 'ch-falcons', regionId: 'rg-kerala', name: 'Falcons', city: 'Thrissur', createdAt: '2026-03-02T09:00:00.000Z' },
-  { id: 'ch-milestones', regionId: 'rg-tvm', name: 'Milestones', city: 'Trivandrum', createdAt: '2026-02-18T09:00:00.000Z' },
-  { id: 'ch-majestic', regionId: 'rg-tvm', name: 'Majestic', city: 'Trivandrum', createdAt: '2026-02-25T09:00:00.000Z' },
-  { id: 'ch-mascots', regionId: 'rg-tvm', name: 'Mascots', city: 'Trivandrum', createdAt: '2026-03-09T09:00:00.000Z' },
+  { id: 'ch-titans', regionId: 'rg-kerala', name: 'Mystics', city: 'Kochi', upiId: 'mystics.bni@upi', upiName: 'BNI Mystics', createdAt: '2026-01-20T09:00:00.000Z' },
+  { id: 'ch-falcons', regionId: 'rg-kerala', name: 'Falcons', city: 'Thrissur', upiId: 'falcons.bni@upi', upiName: 'BNI Falcons', createdAt: '2026-03-02T09:00:00.000Z' },
+  { id: 'ch-milestones', regionId: 'rg-tvm', name: 'Milestones', city: 'Trivandrum', upiId: 'milestones.bni@upi', upiName: 'BNI Milestones', createdAt: '2026-02-18T09:00:00.000Z' },
+  { id: 'ch-majestic', regionId: 'rg-tvm', name: 'Majestic', city: 'Trivandrum', upiId: 'majestic.bni@upi', upiName: 'BNI Majestic', createdAt: '2026-02-25T09:00:00.000Z' },
+  { id: 'ch-mascots', regionId: 'rg-tvm', name: 'Mascots', city: 'Trivandrum', upiId: 'mascots.bni@upi', upiName: 'BNI Mascots', createdAt: '2026-03-09T09:00:00.000Z' },
 ]
 
 type Raw = [name: string, organisation: string, category: string, designation?: string]

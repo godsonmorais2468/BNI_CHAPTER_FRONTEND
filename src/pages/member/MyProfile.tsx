@@ -6,7 +6,7 @@ import { Field, FieldGroup, PageHead, PhotoField, Ring, Sheet } from '../../comp
 import { DESIGNATIONS } from '../../data/seed'
 import { useAuth } from '../../lib/auth'
 import { checklist, percent } from '../../lib/profile'
-import { saveProfile, skipProfile } from '../../lib/store'
+import { saveProfile, setMemberPhoto, skipProfile } from '../../lib/store'
 import { useToast } from '../../lib/toast'
 import type { Married, Member } from '../../lib/types'
 
@@ -136,7 +136,14 @@ function ProfileForm({ member }: { member: Member }) {
               <Field label="Category">
                 <input className="field__control" value={category} onChange={(e) => setCategory(e.target.value)} />
               </Field>
-              <PhotoField label="Photo (Max Size 1MB)" value={photo} onChange={setPhoto} />
+              <PhotoField
+                label="Photo (Max Size 1MB)"
+                value={photo}
+                onChange={(url) => {
+                  setPhoto(url)
+                  setMemberPhoto(member.id, url)
+                }}
+              />
             </div>
           </Sheet>
 

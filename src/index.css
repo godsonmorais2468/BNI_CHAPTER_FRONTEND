@@ -454,6 +454,7 @@ select option { background: #fff; color: var(--ink); }
 
 .duo { display: grid; grid-template-columns: minmax(300px, 400px) minmax(0, 1fr); gap: 24px; align-items: start; }
 .duo > :first-child { position: sticky; top: 100px; }
+.duo-after { margin-top: 24px; }
 .list { display: flex; flex-direction: column; gap: 12px; min-width: 0; }
 .list__title { display: flex; align-items: baseline; gap: 10px; font-size: 19px; font-weight: 600; margin: 4px 4px 4px; color: var(--ink); }
 .list__title span { font-size: 13.5px; font-weight: 500; color: var(--ink-mute); }
@@ -1434,3 +1435,23 @@ a, button, input, select, textarea, label, summary { touch-action: manipulation;
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; scroll-behavior: auto !important; }
 }
+
+/* ---- UPI app picker ---- */
+.upi__to { margin: 0; font-size: 13.5px; color: var(--ink-soft); }
+.upi__to strong { color: var(--ink); font-weight: 600; }
+.upi__apps { display: grid; grid-template-columns: repeat(auto-fill, minmax(92px, 1fr)); gap: 8px; }
+.upi__app { display: flex; flex-direction: column; align-items: center; gap: 8px; padding: 12px 6px; border-radius: 18px; background: #fff; border: 1.5px solid rgba(16, 35, 63, 0.14); color: var(--ink); font-size: 12.5px; font-weight: 500; text-align: center; cursor: pointer; transition: border-color 0.2s, transform 0.15s; }
+.upi__app:hover:not(:disabled) { border-color: var(--red); }
+.upi__app:active:not(:disabled) { transform: scale(0.97); }
+.upi__app:disabled { opacity: 0.5; cursor: not-allowed; }
+.upi__tile { display: grid; place-items: center; width: 46px; height: 46px; border-radius: 15px; color: #fff; font-size: 20px; font-weight: 700; box-shadow: 0 8px 14px -8px rgba(16, 35, 63, 0.55), inset 0 1.5px 0 rgba(255, 255, 255, 0.4); flex: none; }
+.upi__wait { display: flex; flex-direction: column; align-items: center; gap: 10px; padding: 8px 0 2px; text-align: center; }
+.upi__wait > b { font-size: 28px; font-weight: 600; }
+.upi__wait > span:not(.upi__tile) { font-size: 14px; color: var(--ink-soft); }
+.upi__wait small { font-size: 12.5px; color: var(--ink-mute); }
+.upi__wait p { margin: 0; font-size: 13.5px; color: var(--ink-soft); }
+.upi__wait .btn { width: 100%; justify-content: center; }
+.upi__wait .pay__note { margin: 0; }
+
+/* photo preview above the picker */
+.photo__preview { display: block; width: 112px; height: 112px; border-radius: 32px; object-fit: cover; border: 3px solid #fff; box-shadow: 0 14px 26px -12px rgba(133, 0, 31, 0.55); animation: badgePop 0.4s var(--ease); }
