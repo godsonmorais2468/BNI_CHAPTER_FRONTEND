@@ -161,10 +161,10 @@ export default function Meetings() {
                 </Field>
                 <div className="form-grid form-grid--pair">
                   <Field label="Latitude" required error={errors.lat}>
-                    <input className="field__control" inputMode="decimal" value={lat} onChange={(e) => setLat(e.target.value)} placeholder="8.526987" />
+                    <input className="field__control" inputMode="decimal" value={lat} onChange={(e) => setLat(e.target.value)} placeholder="8.488890" />
                   </Field>
                   <Field label="Longitude" required error={errors.lng}>
-                    <input className="field__control" inputMode="decimal" value={lng} onChange={(e) => setLng(e.target.value)} placeholder="76.887900" />
+                    <input className="field__control" inputMode="decimal" value={lng} onChange={(e) => setLng(e.target.value)} placeholder="76.951010" />
                   </Field>
                 </div>
                 <div>

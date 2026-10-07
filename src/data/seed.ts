@@ -250,18 +250,18 @@ function buildMeetings(members: Member[]): { meetings: Meeting[]; attendance: At
   const at = (offset: number) => new Date(now + offset).toISOString()
   const base = { durationMin: 90, createdAt: at(-30 * DAY) }
 
-  /* The Mystics weekly meeting runs 7:00 am to 11:00 am: today's if it has not finished yet, otherwise tomorrow's. */
-  const WEEKLY_MIN = 4 * 60
+  /* The Mystics weekly meeting runs 7:30 am to 7:30 pm: today's if it has not finished yet, otherwise tomorrow's. */
+  const WEEKLY_MIN = 12 * 60
   const slot = new Date(now)
-  slot.setHours(7, 0, 0, 0)
+  slot.setHours(7, 30, 0, 0)
   if (now > slot.getTime() + WEEKLY_MIN * MIN) slot.setDate(slot.getDate() + 1)
   const weekly = slot.getTime()
   const weeklyAt = (offset: number) => new Date(weekly + offset).toISOString()
   const weeklyBase = { ...base, durationMin: WEEKLY_MIN }
 
   const meetings: Meeting[] = [
-    { ...weeklyBase, id: 'mt-titans-now', regionId: 'rg-kerala', chapterId: 'ch-titans', title: 'Weekly meeting', mode: 'offline', startsAt: weeklyAt(0), venue: 'SFS Homebridge, Trivandrum', lat: 8.5269869, lng: 76.8878998, radiusM: 100 },
-    { ...weeklyBase, id: 'mt-titans-w1', regionId: 'rg-kerala', chapterId: 'ch-titans', title: 'Weekly meeting', mode: 'offline', startsAt: weeklyAt(-7 * DAY), venue: 'SFS Homebridge, Trivandrum', lat: 8.5269869, lng: 76.8878998, radiusM: 100 },
+    { ...weeklyBase, id: 'mt-titans-now', regionId: 'rg-kerala', chapterId: 'ch-titans', title: 'Weekly meeting', mode: 'offline', startsAt: weeklyAt(0), venue: 'Hotel Dimora, Trivandrum', lat: 8.4888903, lng: 76.9510104, radiusM: 100 },
+    { ...weeklyBase, id: 'mt-titans-w1', regionId: 'rg-kerala', chapterId: 'ch-titans', title: 'Weekly meeting', mode: 'offline', startsAt: weeklyAt(-7 * DAY), venue: 'Hotel Dimora, Trivandrum', lat: 8.4888903, lng: 76.9510104, radiusM: 100 },
     { ...base, id: 'mt-titans-w2', regionId: 'rg-kerala', chapterId: 'ch-titans', title: 'Online networking call', mode: 'online', startsAt: at(-14 * DAY), venue: '', lat: null, lng: null, radiusM: 100 },
     { ...base, id: 'mt-milestones-now', regionId: 'rg-tvm', chapterId: 'ch-milestones', title: 'Weekly meeting (online)', mode: 'online', startsAt: at(10 * MIN), venue: '', lat: null, lng: null, radiusM: 100 },
   ]
