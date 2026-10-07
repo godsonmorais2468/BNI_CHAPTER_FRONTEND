@@ -250,9 +250,18 @@ function buildMeetings(members: Member[]): { meetings: Meeting[]; attendance: At
   const at = (offset: number) => new Date(now + offset).toISOString()
   const base = { durationMin: 90, createdAt: at(-30 * DAY) }
 
+  /* The Mystics weekly meeting runs 7:00 am to 11:00 am: today's if it has not finished yet, otherwise tomorrow's. */
+  const WEEKLY_MIN = 4 * 60
+  const slot = new Date(now)
+  slot.setHours(7, 0, 0, 0)
+  if (now > slot.getTime() + WEEKLY_MIN * MIN) slot.setDate(slot.getDate() + 1)
+  const weekly = slot.getTime()
+  const weeklyAt = (offset: number) => new Date(weekly + offset).toISOString()
+  const weeklyBase = { ...base, durationMin: WEEKLY_MIN }
+
   const meetings: Meeting[] = [
-    { ...base, id: 'mt-titans-now', regionId: 'rg-kerala', chapterId: 'ch-titans', title: 'Weekly meeting', mode: 'offline', startsAt: at(20 * MIN), venue: 'SFS Homebridge, Trivandrum', lat: 8.5269869, lng: 76.8878998, radiusM: 100 },
-    { ...base, id: 'mt-titans-w1', regionId: 'rg-kerala', chapterId: 'ch-titans', title: 'Weekly meeting', mode: 'offline', startsAt: at(-7 * DAY), venue: 'SFS Homebridge, Trivandrum', lat: 8.5269869, lng: 76.8878998, radiusM: 100 },
+    { ...weeklyBase, id: 'mt-titans-now', regionId: 'rg-kerala', chapterId: 'ch-titans', title: 'Weekly meeting', mode: 'offline', startsAt: weeklyAt(0), venue: 'SFS Homebridge, Trivandrum', lat: 8.5269869, lng: 76.8878998, radiusM: 100 },
+    { ...weeklyBase, id: 'mt-titans-w1', regionId: 'rg-kerala', chapterId: 'ch-titans', title: 'Weekly meeting', mode: 'offline', startsAt: weeklyAt(-7 * DAY), venue: 'SFS Homebridge, Trivandrum', lat: 8.5269869, lng: 76.8878998, radiusM: 100 },
     { ...base, id: 'mt-titans-w2', regionId: 'rg-kerala', chapterId: 'ch-titans', title: 'Online networking call', mode: 'online', startsAt: at(-14 * DAY), venue: '', lat: null, lng: null, radiusM: 100 },
     { ...base, id: 'mt-milestones-now', regionId: 'rg-tvm', chapterId: 'ch-milestones', title: 'Weekly meeting (online)', mode: 'online', startsAt: at(10 * MIN), venue: '', lat: null, lng: null, radiusM: 100 },
   ]
@@ -262,7 +271,7 @@ function buildMeetings(members: Member[]): { meetings: Meeting[]; attendance: At
     .filter((m) => m.chapterId === 'ch-titans')
     .forEach((m, i) => {
       if (i % 4 !== 3) {
-        attendance.push({ id: `at-w1-${i}`, meetingId: 'mt-titans-w1', memberId: m.id, method: i % 2 ? 'geofence' : 'qr', at: at(-7 * DAY + (4 + i) * MIN), distanceM: i % 2 ? 40 + i : undefined })
+        attendance.push({ id: `at-w1-${i}`, meetingId: 'mt-titans-w1', memberId: m.id, method: i % 2 ? 'geofence' : 'qr', at: weeklyAt(-7 * DAY + (4 + i) * MIN), distanceM: i % 2 ? 40 + i : undefined })
       }
       if (i % 5 !== 2) {
         attendance.push({ id: `at-w2-${i}`, meetingId: 'mt-titans-w2', memberId: m.id, method: 'online', at: at(-14 * DAY + (2 + i) * MIN) })
